@@ -36,7 +36,7 @@ public class MaxRectangle_Q5 {
                 }
             }
             
-            ans = Math.max(ans,maxHeight(blocks));
+            ans = Math.max(ans,maxArea(blocks));
             pt.println("ans = "+ans);
         }
 
@@ -44,7 +44,7 @@ public class MaxRectangle_Q5 {
     }
 
 
-    private static int maxHeight(int arr[]){
+    private static int maxArea(int arr[]){
         int n = arr.length;
         int minL[] = new int[n];
         int minR[] = new int[n];
