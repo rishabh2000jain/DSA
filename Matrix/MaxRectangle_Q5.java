@@ -1,8 +1,25 @@
+import java.io.PrintStream;
 import java.util.*;
 public class MaxRectangle_Q5 {
+    public static PrintStream pt = System.out;
     public static void main(String...k){
-        int arr[][] = {{0,1,1,0},{1,1,1,1},{1,1,1,1},{1,1,0,0}};
-        System.out.println("ans=>"+maxRectangle(arr));
+      
+        int arr[][] = {
+        {0,0},
+        {0,0},
+        {0,0},
+        {0,1},
+        {1,0},
+        {1,0},
+        {1,0},
+        {1,0},
+        {0,1},
+        {1,0},
+        {0,1},
+        {1,1},
+        {0,0},
+        {1,1}};
+        System.out.println("ans=>" + maxRectangle(arr));
     } 
 
     public static int maxRectangle(int arr[][]){
@@ -11,14 +28,16 @@ public class MaxRectangle_Q5 {
         int n = blocks.length;
 
         for(int i=0;i<arr.length;i++){
-            for(int pos=0;pos<n;++pos){
-                if(arr[i][pos]==0){
-                    blocks[pos] = 0;
+            for(int j=0;j<n;j++){
+                if(arr[i][j]==0){
+                    blocks[j] = 0;
                 }else{
-                    blocks[pos] += arr[i][pos];
+                    blocks[j] += arr[i][j];
                 }
             }
-            ans = Math.max(ans,maxHeight(arr[i]));
+            
+            ans = Math.max(ans,maxHeight(blocks));
+            pt.println("ans = "+ans);
         }
 
         return ans;
@@ -26,37 +45,45 @@ public class MaxRectangle_Q5 {
 
 
     private static int maxHeight(int arr[]){
-        int n = arr.length-1;
-        int minL[] = new int[n+1];
-        int minR[] = new int[n+1];
+        int n = arr.length;
+        int minL[] = new int[n];
+        int minR[] = new int[n];
         Stack<Integer> st = new Stack<>();
-
-        for(int pos=n;pos>=0;--pos){
+        pt.print("Arr");
+        PrinterUtil.printArray1d(arr);
+        for(int pos=n-1;pos>=0;pos--){
             int currElement = arr[pos];
-            while(!st.isEmpty() && st.peek()<=currElement){
+            while(!st.isEmpty() && arr[st.peek()]>=currElement){
                 st.pop();
             }
             if(st.isEmpty()){
-                minR[pos]=-1;
+                minR[pos]=n;
             }else{
                 minR[pos] = st.peek();
             }
+            st.add(pos);
         }
-
-        for(int pos=0;pos<n;++pos){
+        st.clear();
+        for(int pos=0;pos<n;pos++){
             int currElement = arr[pos];
-            while(!st.isEmpty() && st.peek()<=currElement){
+            while(!st.isEmpty() && arr[st.peek()]>=currElement){
                 st.pop();
             }
             if(st.isEmpty()){
-                minL[pos]=-1;
+                minL[pos]= -1;
             }else{
                 minL[pos] = st.peek();
             }
+            st.add(pos);
         }
         int ans=0;
         for(int pos=0;pos<n;++pos){
-            ans = Math.max(ans,minR[pos]-minL[pos]-1);
+            int currHeight = arr[pos];
+            int currBreadth = (minR[pos]-minL[pos])-1;
+            int currArea = currBreadth*currHeight;
+            if(currArea>ans){
+                ans = currArea;
+            }
         }
 
         return ans;
